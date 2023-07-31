@@ -47,3 +47,17 @@ app.get('/compras/total', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
+app.delete ('/compras/:id', (req, res) => {
+    const compraId = req.params.id;
+    const index = compras.findIndex((compras) => compras.id === compraId)
+    console.log(compraId, "compraID")
+    console.log(index, "index")
+
+    if(index){
+        compras.splice (index, 1)
+        res.json("Compra apagada com sucesso")
+    }else{
+        res.status(404).json({message: "A compra não foi apagada com sucesso"})
+    }
+})
