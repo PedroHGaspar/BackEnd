@@ -1,6 +1,6 @@
-const express = require("express")
+const express = require('express')
 const router = express.Router()
-const controller = require("../controller/heroi")
+const controller = require('./../controllers/viloes')
 
 router.post('/cadastrar', controller.criar)
 
