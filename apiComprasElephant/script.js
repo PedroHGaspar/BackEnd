@@ -29,12 +29,13 @@ app.use(bodyParser.json());
 
 app.post("/tabela", (req, res) => {
     const createTableQuery = `
-    CREATE TABLE clientes (
+    CREATE TABLE produtos (
     id NUMERIC(2) PRIMARY KEY,
     descricao VARCHAR(255),
     preco NUMERIC(6)
     )
     `;
+    const values = [req.body.id, req.body.descricao, req.body.preco]
     // Conectar ao banco de dados e criar a tabela
     database.query(createTableQuery, (err, result) => {
         if (err) {
@@ -52,7 +53,7 @@ app.post("/tabela", (req, res) => {
 
 //Método HTTP para buscar dados
 app.get('/compras', (req, res) => {
-    database.query("SELECT * FROM clientes").then(
+    database.query("SELECT * FROM produtos").then(
         (resultado) => {
             res.status(200).send({ produtos: resultado.rows })
         },
@@ -64,11 +65,10 @@ app.get('/compras', (req, res) => {
 })
 
 
-
 //Método HTTP para cadastrar um novo dado
 app.post("/cadastrar", (req, res) => {
 
-    const query = "INSERT INTO clientes(id, descricao, preco) VALUES ($1, $2, $3);"
+    const query = "INSERT INTO produtos(id, descricao, preco) VALUES ($1, $2, $3);"
     const values = [req.body.id, req.body.descricao, req.body.preco]
 
     database.query(query, values).then(
@@ -86,7 +86,7 @@ app.post("/cadastrar", (req, res) => {
 //Método HTTP para excluir um dado ja existente
 app.delete("/deletar/:id", (req, res) => {
 
-    const query = "DELETE FROM clientes WHERE id=$1;"
+    const query = "DELETE FROM produtos WHERE id=$1;"
     const values = [req.params.id]
 
     database.query(query, values).then(
@@ -102,7 +102,7 @@ app.delete("/deletar/:id", (req, res) => {
 })
 
 app.get('/valor-total', (req, res) => {
-    database.query("SELECT * FROM clientes")
+    database.query("SELECT * FROM produtos")
         .then((resultado) => {
             const valorTotal = resultado.rows.reduce((acumulador, cliente) => acumulador + parseInt(cliente.preco), 0);
             res.status(200).send({ valorTotal: valorTotal });
@@ -112,6 +112,21 @@ app.get('/valor-total', (req, res) => {
             console.log(erro);
         });
 });
+
+//Realizando UPDATE no produto desejado
+app.put = (req, res) => {
+    const query = "UPDATE produtos SET nome=$1, preco=$2, descricao=$3 WHERE id=$4"
+    const values = [req.body.nome, req.body.preco, req.body.descricao, req.params.id]
+    database.query(query, values).then(
+        () => {
+            res.status(200).send({ message: "Produto atualizado com sucesso" })
+        },
+        (error) => {
+            res.status(500).send({ error: error })
+        }
+    )
+}
+
 
 
 app.listen(port, () => {
