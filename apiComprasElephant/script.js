@@ -4,7 +4,7 @@ const port = 3000;
 
 //conectando ao Banco de dados SQL
 const pg = require("pg");
-const database = new pg.Client("postgres://vzjiwujv:bSmcnIMnEFKvtczXtTAG6I-SpNG5ShW7@silly.db.elephantsql.com/vzjiwujv")
+const database = new pg.Client("url aqui")
 
 database.connect((erro) => {
     if (erro) {
