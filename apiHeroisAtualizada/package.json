@@ -13,11 +13,12 @@
     "Heróis",
     "SENAI"
   ],
-  "author": "Paulo Cesar",
+  "author": "Pedro Henrique",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "pg": "^8.11.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
