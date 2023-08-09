@@ -166,7 +166,7 @@ app.get("/cervejaria/buscar-por-tipo/:tipo", (req, res) => {
 
 //ORDENAR POR ASC E DESC pelo SQL
 app.get('/cardapio/ordenar/:ordeByAbv', (req, res) => {
-    const { ordeByAbv } = req.params;
+    const { ordeByAbv } = req.params; //aqui a  gente coloca uma constante fixa para ela poder ser pesquisada por maiorParaMenor e menorParaMaior
 
     let query;
     if (ordeByAbv === 'maiorParaMenor') {
