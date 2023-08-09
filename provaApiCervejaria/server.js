@@ -53,8 +53,8 @@ app.post("/cervejaria", (req, res) => {
     )
     `;
 
-    const values = [req.body.id, req.body.nome, req.body.abv, req.body.tipo, req.body.nacionalidade]
     // Conectar ao banco de dados e criar a tabela
+    const values = [req.body.id, req.body.nome, req.body.abv, req.body.tipo, req.body.nacionalidade]
     database.query(createTableQuery, (err, result) => {
         if (err) {
             console.error('Erro ao criar a tabela:', err);
@@ -90,8 +90,6 @@ app.delete("/cerveja-delete", (req, res) => {
 
 
 
-
-
 app.get('/cardapio', (req, res) => {
     database.query("SELECT * FROM cervejas").then(
         (resultado) => {
@@ -103,6 +101,7 @@ app.get('/cardapio', (req, res) => {
         }
     );
 });
+
 
 
 //GET PARA BUSCAR CERVEJA PELO NOME e ja faz a busca parcial com o LIKE do sql
@@ -125,6 +124,7 @@ app.get("/cervejaria/buscar-por-nome/:nome", (req, res) => {
 });
 
 
+
 //GET PARA BUSCAR CERVEJA PELA NACIONALIDADE
 app.get("/cervejaria/buscar-por-nacionalidade/:nacionalidade", (req, res) => {
     const nacionalidadeCerveja = req.params.nacionalidade; // aqui ele faz a req pela nacionalidade
@@ -143,6 +143,7 @@ app.get("/cervejaria/buscar-por-nacionalidade/:nacionalidade", (req, res) => {
         }
     });
 });
+
 
 //GET PARA BUSCAR CERVEJA PELA tipo e ja faz a busca parcial com o LIKE do sql
 app.get("/cervejaria/buscar-por-tipo/:tipo", (req, res) => {
@@ -163,6 +164,7 @@ app.get("/cervejaria/buscar-por-tipo/:tipo", (req, res) => {
 });
 
 
+//ORDENAR POR ASC E DESC pelo SQL
 app.get('/cardapio/ordenar/:ordeByAbv', (req, res) => {
     const { ordeByAbv } = req.params;
 
