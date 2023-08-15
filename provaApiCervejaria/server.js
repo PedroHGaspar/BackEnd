@@ -30,10 +30,10 @@ app.post("/inserir-cerveja", (req, res) => {
 
     const values = [id, nome, abvFloat, tipo, nacionalidade];
 
-    database.query(insertQuery, values, (err, result) => {
-        if (err) {
-            console.error("Erro ao inserir cerveja:", err);
-            res.status(500).json({ error: "Erro ao inserir cerveja" });
+    database.query(insertQuery, values, (erro, result) => {
+        if (erro) {
+            console.error("erro ao inserir cerveja:", erro);
+            res.status(500).json({ error: "erro ao inserir cerveja" });
         } else {
             console.log("Cerveja inserida com sucesso:", result.rows[0]);
             res.status(201).json({ message: "Cerveja inserida com sucesso" });
@@ -55,9 +55,9 @@ app.post("/cervejaria", (req, res) => {
 
     // Conectar ao banco de dados e criar a tabela
     const values = [req.body.id, req.body.nome, req.body.abv, req.body.tipo, req.body.nacionalidade]
-    database.query(createTableQuery, (err, result) => {
-        if (err) {
-            console.error('Erro ao criar a tabela:', err);
+    database.query(createTableQuery, (erro, result) => {
+        if (erro) {
+            console.error('erro ao criar a tabela:', erro);
         } else {
             console.log('Tabela criada com sucesso!');
         }
@@ -75,9 +75,9 @@ app.delete("/cerveja-delete", (req, res) => {
 
     const values = [req.body.id, req.body.nome, req.body.abv, req.body.tipo, req.body.nacionalidade]
     // Conectar ao banco de dados e criar a tabela
-    database.query(createTableQuery, (err, result) => {
-        if (err) {
-            console.error('Erro ao DELETAR.', err);
+    database.query(createTableQuery, (erro, result) => {
+        if (erro) {
+            console.error('erro ao DELETAR.', erro);
         } else {
             console.log('TUDO FOI DELETADO!');
         }
@@ -113,16 +113,15 @@ app.get("/cervejaria/buscar-por-nome/:nome", (req, res) => {
       WHERE nome LIKE $1;
     `;
 
-    database.query(searchQuery, [nomeParcial], (err, result) => {
-        if (err) {
-            console.error("Erro ao buscar cerveja:", err);
-            res.status(500).json({ error: "Erro ao buscar cerveja" });
+    database.query(searchQuery, [nomeParcial], (erro, result) => {
+        if (erro) {
+            console.error("erro ao buscar cerveja:", erro);
+            res.status(500).json({ error: "erro ao buscar cerveja" });
         } else {
             res.status(200).json({ produtos: result.rows });
         }
     });
 });
-
 
 
 //GET PARA BUSCAR CERVEJA PELA NACIONALIDADE
@@ -134,15 +133,38 @@ app.get("/cervejaria/buscar-por-nacionalidade/:nacionalidade", (req, res) => {
       WHERE nacionalidade = $1;
     `;
 
-    database.query(searchQuery, [nacionalidadeCerveja], (err, result) => {
-        if (err) {
-            console.error("Erro ao buscar cerveja:", err);
-            res.status(500).json({ error: "Erro ao buscar cerveja" });
+    database.query(searchQuery, [nacionalidadeCerveja], (erro, result) => {
+        if (erro) {
+            console.error("erro ao buscar cerveja:", erro);
+            res.status(500).json({ error: "erro ao buscar cerveja" });
         } else {
             res.status(200).json({ produtos: result.rows });
         }
     });
 });
+
+app.put('/cervejaria/atualizarId/:id', (req, res) => {
+    const getId = parseInt(req.params.id);
+    const { nome, abv, tipo, nacionalidade } = req.body;
+
+    const updateQuery = `
+        UPDATE cervejas
+        SET nome = $1, abv = $2, tipo = $3, nacionalidade = $4
+        WHERE id = $5`;
+
+    const values = [nome, abv, tipo, nacionalidade, getId];
+
+    database.query(updateQuery, values, (erro, result) => {
+        if (erro) {
+            console.error("erro ao atualizar cerveja:", erro);
+            res.status(500).json({ error: "erro ao atualizar cerveja" });
+        } else {
+            res.status(200).json({ message: "Cerveja atualizada com sucesso" });
+        }
+    });
+});
+
+
 
 
 //GET PARA BUSCAR CERVEJA PELA tipo e ja faz a busca parcial com o LIKE do sql
@@ -154,11 +176,11 @@ app.get("/cervejaria/buscar-por-tipo/:tipo", (req, res) => {
       WHERE tipo = $1;
     `;
 
-    database.query(searchQuery, [tipoCerveja], (err, result) => {
-        if (err) {
-            res.status(500).json({ error: "Erro ao buscar cerveja" });
+    database.query(searchQuery, [tipoCerveja], (erro, result) => {
+        if (erro) {
+            res.status(500).json({ error: "erro ao buscar cerveja" });
         } else {
-            res.status(200).json({ produtos: result.rows });
+            res.status(200).json({ produtos: result.rows + "Deu certo"});
         }
     });
 });
@@ -194,5 +216,3 @@ app.get('/cardapio/ordenar/:ordeByAbv', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor express rodando na porta: ${port}`);
 });
-
-
